@@ -26,8 +26,21 @@ func getEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
-func createMessage() {
+func createMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	//func for creating messages from the bot to send to channel
+
+	//ignore all messages sent by bot itself
+	if message.Author.ID == session.State.User.ID {
+		return
+	}
+
+	//simple hello message
+	if message.Content == "!hello" {
+		_, err := session.ChannelMessageSend(message.ChannelID, "Ahoy there steam scrapers")
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 }
 
 func main() {
