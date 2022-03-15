@@ -3,6 +3,8 @@ package main
 import (
 	// "encoding/json"
 	"fmt"
+	"time"
+
 	// "io/ioutil"
 	"os"
 	"os/signal"
@@ -12,6 +14,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/gocolly/colly"
 	"github.com/joho/godotenv"
 )
 
@@ -31,6 +34,47 @@ func getEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
+func scrapeSteam(url string) []Game {
+	//set up colly collector instance
+	c := colly.NewCollector()
+	//set request timeout limit
+	c.SetRequestTimeout(120 * time.Second)
+
+	//set up a slice of games
+	games := make([]Game, 0)
+
+	//scrape selectors for name, releasedate, and discounted prices.
+	c.OnHTML("a.search_result_row", func(e *colly.HTMLElement) {
+		e.ForEach("div.responsive_search_name_combined", func(i int, h *colly.HTMLElement) {
+			//only grab games that are discounted
+			if h.ChildText("div.discounted") != "" {
+				newGame := Game{}
+				newGame.Name = h.ChildText("span.title")
+				newGame.ReleaseDate = h.ChildText("div.search_released")
+				newGame.Price = h.ChildText("div.discounted")
+				games = append(games, newGame)
+			}
+		})
+	})
+
+	//callbacks for logging in terminal for troubleshooting
+	c.OnRequest(func(r *colly.Request) {
+		fmt.Println("Visiting", r.URL)
+	})
+
+	c.OnResponse(func(r *colly.Response) {
+		fmt.Println("Got a response from", r.Request.URL)
+	})
+
+	c.OnError(func(r *colly.Response, e error) {
+		fmt.Println("Received error:", e)
+	})
+
+	//visit to begin scraping 
+	c.Visit(url)
+	
+	return games
+}
 
 func createMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	//func for creating messages from the bot to send to channel
