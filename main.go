@@ -25,10 +25,6 @@ type Game struct {
 	ReleaseDate string
 }
 
-type Genre struct {
-	Name string
-	Id string
-}
 
 func generateGenres() map[string]string {
 	// create map of genres to their tag IDs
