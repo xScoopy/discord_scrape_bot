@@ -25,6 +25,35 @@ type Game struct {
 	ReleaseDate string
 }
 
+type Genre struct {
+	Name string
+	Id string
+}
+
+func generateGenres() []Genre {
+	genreList := make([]Genre, 0)
+	// create map of genres to their tag IDs
+	genreMap := make(map[string]string)
+	genreMap["action"] = "19"
+	genreMap["indie"] = "492"
+	genreMap["singleplayer"] = "4182"
+	genreMap["adventure"] = "21"
+	genreMap["simulation"] = "599"
+	genreMap["casual"] = "597"
+	genreMap["rpg"] = "122"
+	genreMap["strategy"] = "9"
+	genreMap["2d"] = "3871"
+	genreMap["multiplayer"] = "3859"
+
+	for key, element := range genreMap {
+        newGenre := Genre{}
+		newGenre.Name = key
+		newGenre.Id = element
+		genreList = append(genreList, newGenre)
+    }
+	return genreList
+}
+
 func getEnvVariable(key string) string {
 	//method to retrieve bot token from .env
 	err := godotenv.Load(".env")
@@ -94,6 +123,8 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 }
 
 func main() {
+
+
 	botToken := getEnvVariable("SECRET")
     // make new instance with our bot token
     discordInstance, err := discordgo.New("Bot " + botToken)
