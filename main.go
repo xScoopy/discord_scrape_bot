@@ -54,6 +54,16 @@ func generateGenres() []Genre {
 	return genreList
 }
 
+// function to trim first character from a string
+func trimFirstChar(s string) string {
+    for i := range s {
+        if i > 0 {
+            return s[i:]
+        }
+    }
+    return ""
+}
+
 func getEnvVariable(key string) string {
 	//method to retrieve bot token from .env
 	err := godotenv.Load(".env")
@@ -120,6 +130,8 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 			fmt.Println(err)
 		}
 	}
+
+
 }
 
 func main() {
