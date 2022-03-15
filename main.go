@@ -25,6 +25,9 @@ type Game struct {
 	ReleaseDate string
 }
 
+type MessageSection struct {
+	Message string
+}
 
 func generateGenres() map[string]string {
 	// create map of genres to their tag IDs
@@ -54,10 +57,22 @@ func trimFirstChar(s string) string {
 }
 
 //function to format the games into string form for printing as a message
-func formatGames(games []Game) string {
-	formattedGames := ""
+func formatGames(games []Game) []MessageSection {
+	formattedGames := make([]MessageSection, 0)
+	counter := 0
+	newMessage := ""
 	for _, game := range games {
-		formattedGames += "\nTitle: *" + game.Name + "* \nPrice:(original vs discounted) *" + game.Price + "* \nRelease: *" + game.ReleaseDate + "*\n"
+		if counter < 10 {
+			newMessage += "\nTitle: *" + game.Name + "* \nPrice:(original vs discounted) *" + game.Price + "* \nRelease: *" + game.ReleaseDate + "*\n"
+			counter ++
+		} else {
+			newMessageSection := MessageSection{Message: newMessage}
+			formattedGames = append(formattedGames, newMessageSection)
+			counter = 0
+			newMessage = ""
+			newMessage += "\nTitle: *" + game.Name + "* \nPrice:(original vs discounted) *" + game.Price + "* \nRelease: *" + game.ReleaseDate + "*\n"
+			counter ++
+		}
 	}
 	return formattedGames
 }
@@ -140,9 +155,12 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	}
 	if genreList[trimFirstChar(message.Content)] != "" {
 		results := scrapeSteam("https://store.steampowered.com/search/?filter=topsellers&tags=" + genreList[trimFirstChar(message.Content)])
-		_, err := session.ChannelMessageSend(message.ChannelID, formatGames(results))
-		if err != nil {
-			fmt.Println(err)
+		messages := formatGames(results)
+		for i := range messages {
+			_, err := session.ChannelMessageSend(message.ChannelID, messages[i].Message)
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	} else {
 		_, err := session.ChannelMessageSend(message.ChannelID, "genre not currently supported. Try !genres for a list of all supported genres")
