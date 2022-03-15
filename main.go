@@ -30,8 +30,7 @@ type Genre struct {
 	Id string
 }
 
-func generateGenres() []Genre {
-	genreList := make([]Genre, 0)
+func generateGenres() map[string]string {
 	// create map of genres to their tag IDs
 	genreMap := make(map[string]string)
 	genreMap["action"] = "19"
@@ -45,13 +44,7 @@ func generateGenres() []Genre {
 	genreMap["2d"] = "3871"
 	genreMap["multiplayer"] = "3859"
 
-	for key, element := range genreMap {
-        newGenre := Genre{}
-		newGenre.Name = key
-		newGenre.Id = element
-		genreList = append(genreList, newGenre)
-    }
-	return genreList
+	return genreMap
 }
 
 // function to trim first character from a string
@@ -62,6 +55,15 @@ func trimFirstChar(s string) string {
         }
     }
     return ""
+}
+
+//function to format the games into string form for printing as a message
+func formatGames(games []Game) string {
+	formattedGames := ""
+	for _, game := range games {
+		formattedGames += "\nTitle: *" + game.Name + "* \nPrice:(original vs discounted) *" + game.Price + "* \nRelease: *" + game.ReleaseDate + "*\n"
+	}
+	return formattedGames
 }
 
 func getEnvVariable(key string) string {
@@ -117,7 +119,7 @@ func scrapeSteam(url string) []Game {
 
 func createMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	//func for creating messages from the bot to send to channel
-
+	genreList := generateGenres()
 	//ignore all messages sent by bot itself
 	if message.Author.ID == session.State.User.ID {
 		return
@@ -130,7 +132,28 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 			fmt.Println(err)
 		}
 	}
-
+	if message.Content == "!genres" {
+		genreNames := ""
+		for key := range genreList {
+			genreNames += (key + "\n")
+		}
+		_, err := session.ChannelMessageSend(message.ChannelID, genreNames)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	if genreList[trimFirstChar(message.Content)] != "" {
+		results := scrapeSteam("https://store.steampowered.com/search/?filter=topsellers&tags=" + genreList[trimFirstChar(message.Content)])
+		_, err := session.ChannelMessageSend(message.ChannelID, formatGames(results))
+		if err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		_, err := session.ChannelMessageSend(message.ChannelID, "genre not currently supported. Try !genres for a list of all supported genres")
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 
 }
 
