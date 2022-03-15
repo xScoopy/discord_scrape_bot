@@ -23,6 +23,7 @@ type Game struct {
 	Name        string
 	Price       string
 	ReleaseDate string
+	Link string 
 }
 
 type MessageSection struct {
@@ -63,14 +64,14 @@ func formatGames(games []Game) []MessageSection {
 	newMessage := ""
 	for _, game := range games {
 		if counter < 10 {
-			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + " \nRelease: " + game.ReleaseDate + "\n"
+			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + " \nRelease: " + game.ReleaseDate + "\nLink: " + game.Link + "\n"
 			counter ++
 		} else {
 			newMessageSection := MessageSection{Message: newMessage}
 			formattedGames = append(formattedGames, newMessageSection)
 			counter = 0
 			newMessage = ""
-			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + "* \nRelease: " + game.ReleaseDate + "\n"
+			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + " \nRelease: " + game.ReleaseDate + "\nLink: " + game.Link + "\n"
 			counter ++
 		}
 	}
@@ -101,6 +102,7 @@ func scrapeSteam(url string) []Game {
 			//only grab games that are discounted
 			if h.ChildText("div.discounted") != "" {
 				newGame := Game{}
+				newGame.Link = e.Attr("href")
 				newGame.Name = h.ChildText("span.title")
 				newGame.ReleaseDate = h.ChildText("div.search_released")
 				newGame.Price = h.ChildText("div.discounted")
@@ -135,7 +137,9 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	if message.Author.ID == session.State.User.ID {
 		return
 	}
-
+	if message.Content[0] != '!' {
+		return
+	}
 	//simple hello message
 	if message.Content == "!hello" {
 		_, err := session.ChannelMessageSend(message.ChannelID, "Ahoy there steam scrapers")
