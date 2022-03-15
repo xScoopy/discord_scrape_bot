@@ -63,7 +63,7 @@ func formatGames(games []Game) []MessageSection {
 	counter := 0
 	newMessage := ""
 	for _, game := range games {
-		if counter < 10 {
+		if counter < 6 {
 			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + " \nRelease: " + game.ReleaseDate + "\nLink: " + game.Link + "\n"
 			counter ++
 		} else {
@@ -140,13 +140,6 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	if message.Content[0] != '!' {
 		return
 	}
-	//simple hello message
-	if message.Content == "!hello" {
-		_, err := session.ChannelMessageSend(message.ChannelID, "Ahoy there steam scrapers")
-		if err != nil {
-			fmt.Println(err)
-		}
-	}
 	if message.Content == "!genres" {
 		genreNames := ""
 		for key := range genreList {
@@ -156,6 +149,7 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 		if err != nil {
 			fmt.Println(err)
 		}
+		return
 	}
 	if genreList[trimFirstChar(message.Content)] != "" {
 		results := scrapeSteam("https://store.steampowered.com/search/?filter=topsellers&tags=" + genreList[trimFirstChar(message.Content)])
