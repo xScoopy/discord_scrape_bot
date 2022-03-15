@@ -63,14 +63,14 @@ func formatGames(games []Game) []MessageSection {
 	newMessage := ""
 	for _, game := range games {
 		if counter < 10 {
-			newMessage += "\nTitle: *" + game.Name + "* \nPrice:(original vs discounted) *" + game.Price + "* \nRelease: *" + game.ReleaseDate + "*\n"
+			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + " \nRelease: " + game.ReleaseDate + "\n"
 			counter ++
 		} else {
 			newMessageSection := MessageSection{Message: newMessage}
 			formattedGames = append(formattedGames, newMessageSection)
 			counter = 0
 			newMessage = ""
-			newMessage += "\nTitle: *" + game.Name + "* \nPrice:(original vs discounted) *" + game.Price + "* \nRelease: *" + game.ReleaseDate + "*\n"
+			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + "* \nRelease: " + game.ReleaseDate + "\n"
 			counter ++
 		}
 	}
