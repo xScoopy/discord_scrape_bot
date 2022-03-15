@@ -2,10 +2,8 @@ package main
 
 import (
 	// "encoding/json"
-	// "flag"
 	"fmt"
 	// "io/ioutil"
-	// "net/http"
 	"os"
 	"os/signal"
 
@@ -17,6 +15,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+//define game struct to hold game data from scrape
+type Game struct {
+	Name        string
+	Price       string
+	ReleaseDate string
+}
+
 func getEnvVariable(key string) string {
 	//method to retrieve bot token from .env
 	err := godotenv.Load(".env")
@@ -25,6 +30,7 @@ func getEnvVariable(key string) string {
 	}
 	return os.Getenv(key)
 }
+
 
 func createMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	//func for creating messages from the bot to send to channel
