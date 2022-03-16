@@ -64,14 +64,14 @@ func formatGames(games []Game) []MessageSection {
 	newMessage := ""
 	for _, game := range games {
 		if counter < 6 {
-			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + " \nRelease: " + game.ReleaseDate + "\nLink: " + game.Link + "\n"
+			newMessage += "\nTitle: **" + game.Name + "** \nPrice:(original vs discounted) **" + game.Price + "** \nRelease: " + game.ReleaseDate + "\nLink: <" + game.Link + ">\n"
 			counter ++
 		} else {
 			newMessageSection := MessageSection{Message: newMessage}
 			formattedGames = append(formattedGames, newMessageSection)
 			counter = 0
 			newMessage = ""
-			newMessage += "\nTitle: " + game.Name + " \nPrice:(original vs discounted) " + game.Price + " \nRelease: " + game.ReleaseDate + "\nLink: " + game.Link + "\n"
+			newMessage += "\nTitle: **" + game.Name + "** \nPrice:(original vs discounted) **" + game.Price + "** \nRelease: " + game.ReleaseDate + "\nLink: <" + game.Link + ">\n"
 			counter ++
 		}
 	}
@@ -132,7 +132,7 @@ func scrapeSteam(url string) []Game {
 
 func createMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	//func for creating messages from the bot to send to channel
-	genreList := generateGenres()
+	
 	//ignore all messages sent by bot itself
 	if message.Author.ID == session.State.User.ID {
 		return
@@ -140,6 +140,9 @@ func createMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	if message.Content[0] != '!' {
 		return
 	}
+	//if a valid message is sent, generate genre list
+	genreList := generateGenres()
+
 	if message.Content == "!genres" {
 		genreNames := ""
 		for key := range genreList {
