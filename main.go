@@ -1,11 +1,9 @@
 package main
 
 import (
-	// "encoding/json"
 	"fmt"
 	"time"
 
-	// "io/ioutil"
 	"log"
 	"os"
 	"os/signal"
