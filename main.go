@@ -20,9 +20,10 @@ import (
 //define game struct to hold game data from scrape
 type Game struct {
 	Name        string
-	Price       string
+	Original 	string
+	Discount    string
 	ReleaseDate string
-	Link string 
+	Link 		string 
 }
 
 type MessageSection struct {
@@ -56,6 +57,7 @@ func trimFirstChar(s string) string {
     return ""
 }
 
+//take scraped prices and separate them into 2 different price strings for data and presentation purposes. 
 func separatePrices(prices string) []string {
 	//trim first dollar sign
 	newPrices := trimFirstChar(prices)
@@ -72,14 +74,14 @@ func formatGames(games []Game) []MessageSection {
 	newMessage := ""
 	for _, game := range games {
 		if counter < 6 {
-			newMessage += "\nTitle: **" + game.Name + "** \nPrice:(original vs discounted) **" + game.Price + "** \nRelease: " + game.ReleaseDate + "\nLink: <" + game.Link + ">\n"
+			newMessage += "\nTitle: **" + game.Name + "** \nPrice: ~~$" + game.Original + "~~" + " **$" + game.Discount + "** \nRelease: " + game.ReleaseDate + "\nLink: <" + game.Link + ">\n"
 			counter ++
 		} else {
 			newMessageSection := MessageSection{Message: newMessage}
 			formattedGames = append(formattedGames, newMessageSection)
 			counter = 0
 			newMessage = ""
-			newMessage += "\nTitle: **" + game.Name + "** \nPrice:(original vs discounted) **" + game.Price + "** \nRelease: " + game.ReleaseDate + "\nLink: <" + game.Link + ">\n"
+			newMessage += "\nTitle: **" + game.Name + "** \nPrice: ~~$" + game.Original + "~~" + " **$" + game.Discount + "** \nRelease: " + game.ReleaseDate + "\nLink: <" + game.Link + ">\n"
 			counter ++
 		}
 	}
@@ -113,7 +115,8 @@ func scrapeSteam(url string) []Game {
 				newGame.Link = e.Attr("href")
 				newGame.Name = h.ChildText("span.title")
 				newGame.ReleaseDate = h.ChildText("div.search_released")
-				newGame.Price = h.ChildText("div.discounted")
+				prices := separatePrices(h.ChildText("div.discounted"))
+				newGame.Original, newGame.Discount = prices[0], prices[1]
 				games = append(games, newGame)
 			}
 		})
