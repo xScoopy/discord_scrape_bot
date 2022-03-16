@@ -1,5 +1,6 @@
 module github.com/xScoopy/discord_scrape_bot
 
+// +heroku goVersion go1.18
 go 1.18
 
 require (
