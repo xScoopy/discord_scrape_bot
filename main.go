@@ -87,7 +87,7 @@ func formatGames(games []Game) []MessageSection {
 
 func getEnvVariable(key string) string {
 	//method to retrieve bot token from .env
-	err := godotenv.Load(".env")
+	godotenv.Load(".env")
 	
 	return os.Getenv(key)
 }
