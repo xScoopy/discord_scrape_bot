@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"log"
 	"os"
 	"os/signal"
 	"strings"
@@ -89,9 +88,7 @@ func formatGames(games []Game) []MessageSection {
 func getEnvVariable(key string) string {
 	//method to retrieve bot token from .env
 	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Problem loading .env file.")
-	}
+	
 	return os.Getenv(key)
 }
 
