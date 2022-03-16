@@ -6,11 +6,10 @@ import (
 	"time"
 
 	// "io/ioutil"
+	"log"
 	"os"
 	"os/signal"
-
-	// "strings"
-	"log"
+	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
@@ -55,6 +54,15 @@ func trimFirstChar(s string) string {
         }
     }
     return ""
+}
+
+func separatePrices(prices string) []string {
+	//trim first dollar sign
+	newPrices := trimFirstChar(prices)
+	original, discounted, _ := strings.Cut(newPrices, "$")
+	priceSlice := make([]string, 2)
+	priceSlice[0], priceSlice[1] = original, discounted
+	return priceSlice
 }
 
 //function to format the games into string form for printing as a message
