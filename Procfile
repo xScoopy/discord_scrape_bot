@@ -1,1 +1,1 @@
-web: discord_scrape_bot
+web: bin/discord_scrape_bot
