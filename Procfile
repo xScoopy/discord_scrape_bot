@@ -1,1 +1,1 @@
-web: currency
+web: discord_scrape_bot
