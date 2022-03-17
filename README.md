@@ -24,7 +24,7 @@ Choose Discord server you'd like the bot added to.
 Within the Discord server, there are a few commands that can be utilized. 
 
 - !genres - displays the list of genres supported by the bot. 
-- !<genre> - triggers a scrape of the Steam Store's top selling games under the genre entered here. Both original and discounted prices will be provided, along with a release date and link to the game page directly on Steam. 
+- !{genre} - triggers a scrape of the Steam Store's top selling games under the genre entered here. Both original and discounted prices will be provided, along with a release date and link to the game page directly on Steam. 
 
 
 
