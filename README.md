@@ -31,10 +31,13 @@ Within the Discord server, there are a few commands that can be utilized.
 
 ## Demo Images
 
+### Display all genres 
 <img width="1269" alt="Screen Shot 2022-03-16 at 7 40 06 PM" src="https://user-images.githubusercontent.com/69348168/158714040-d3ca8c78-6123-44f7-a40d-c82eee875f13.png">
 
+### Specific genre command 
 <img width="1220" alt="Screen Shot 2022-03-16 at 7 40 40 PM" src="https://user-images.githubusercontent.com/69348168/158714065-b0e06f42-bf65-4e3f-8e6b-4bc69d2a7f4b.png">
 
+### Output from above command
 <img width="1218" alt="Screen Shot 2022-03-16 at 7 41 09 PM" src="https://user-images.githubusercontent.com/69348168/158714099-c28e31b6-2d22-4434-8c2f-a5c53356a067.png">
 
 
